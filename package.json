@@ -4,10 +4,11 @@
   "description": "Never miss a thing in life. ",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "",
-  "license": "",
+  "license": "ISC",
   "keywords": [
     "Express",
     "RestAPI",
@@ -20,5 +21,13 @@
     "express": "^4.17.1",
     "mongoose": "^6.0.9",
     "winston": "^3.3.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shraazp/node-easy-notes-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/shraazp/node-easy-notes-app/issues"
+  },
+  "homepage": "https://github.com/shraazp/node-easy-notes-app#readme"
 }
