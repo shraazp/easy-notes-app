@@ -10,11 +10,14 @@ app.use(express.urlencoded({
 }))
 app.use(express.json())
 require('./app/routes/note.routes.js')(app);
+//require logger
+const logger = require('./utils/logger');
 // Connecting to the database
 mongoose.connect(dbConfig.url, {
     useNewUrlParser: true
 }).then(() => {
-    console.log("Successfully connected to the database");    
+    console.log("Successfully connected to the database");   
+    logger.info("Successfully connected to the database"); 
 }).catch(err => {
     console.log('Could not connect to the database. Exiting now...', err);
     process.exit();
@@ -22,10 +25,11 @@ mongoose.connect(dbConfig.url, {
 // define a simple route
 app.get('/', (req, res) => {
     res.json({"message": "Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."});
+    logger.info("Welcome to EasyNotes application. Take notes quickly. Organize and keep track of all your notes."); 
 });
 
 // listen for requests
 app.listen(3000, () => {
     console.log("Server is listening on port 3000");
-    
+    logger.info(`Server started and running `)
 });
