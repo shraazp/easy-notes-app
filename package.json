@@ -2,10 +2,9 @@
   "name": "easy-notes-app",
   "version": "1.0.0",
   "description": "Never miss a thing in life. ",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "nodemon server.js"
   },
   "author": "",
   "license": "ISC",
@@ -19,8 +18,9 @@
   "dependencies": {
     "body-parser": "^1.19.0",
     "express": "^4.17.1",
-    "mongoose": "^6.0.9",
-    "winston": "^3.3.3"
+    "mongoose": "^6.0.10",
+    "winston": "^3.3.3",
+    "winston-daily-rotate-file": "^4.5.5"
   },
   "repository": {
     "type": "git",
@@ -29,5 +29,8 @@
   "bugs": {
     "url": "https://github.com/shraazp/node-easy-notes-app/issues"
   },
-  "homepage": "https://github.com/shraazp/node-easy-notes-app#readme"
+  "homepage": "https://github.com/shraazp/node-easy-notes-app#readme",
+  "devDependencies": {
+    "nodemon": "^2.0.13"
+  }
 }
