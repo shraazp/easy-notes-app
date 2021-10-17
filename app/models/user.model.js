@@ -1,10 +1,10 @@
 const mongoose = require('mongoose')
 const UserSchema = mongoose.Schema({
-    firstName: String,
+    firstName: {type:String,required:true},
     lastName: String,
-    address: String,
+    password: {type:String,required:true},
     phoneNumber: String,
-    email: String
+    email: {type:String,required:true}
 }, {timestamps: true});
 const User = mongoose.model('User', UserSchema);
 // create a user
@@ -12,7 +12,7 @@ const createUser = (userDetails) => {
     const user = new User({
         firstName: userDetails.firstName,
         lastName: userDetails.lastName,
-        address: userDetails.address,
+        password: userDetails.password,
         phoneNumber: userDetails.phoneNumber,
         email: userDetails.email
     })
@@ -33,10 +33,10 @@ const updateUser = (findId, userDetails) => {
     return User.findByIdAndUpdate(findId, {
         firstName: userDetails.firstName,
         lastName: userDetails.lastName,
-        address: userDetails.address,
+        password: userDetails.password,
         phoneNumber: userDetails.phoneNumber,
         email: userDetails.email
-    }, {new: true})
+    })
 };
 // query to delete a note
 const deleteById = (findId) => {

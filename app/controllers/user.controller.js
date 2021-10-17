@@ -49,7 +49,6 @@ exports.update = (req, res) => { // Find note and update it with the request bod
     updateUsers(id, userDetails).then(result => {
         res.send(result);
     }).catch(err => {
-        console.log("catch" + err)
         if (err.kind === 'ObjectId') {
             logger.error("user not found with id")
             return res.status(404).send({
