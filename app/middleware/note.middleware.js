@@ -1,4 +1,4 @@
-module.exports = (req, res, next) => { // check if content is present
+const validate = (req, res, next) => { // check if content is present
     if (!req.body.content) {
         return res.status(400).send({message: "Note content can not be empty (handled by middleware)"});
     }
@@ -10,3 +10,21 @@ module.exports = (req, res, next) => { // check if content is present
         next()
     }
 }
+const jwtHelper = require('../../utils/jwt');
+const authenticateJWT = (req, res, next) => {
+    const authHeader = req.headers.authorization;
+
+    if (authHeader) {
+        const token = authHeader.split(' ')[1];
+
+        jwtHelper.verifyToken(token,(err, user) => {
+            if (err) {
+                return res.send(err);
+            }
+            next();
+        });
+    } else {
+        res.sendStatus(401);
+    }
+};
+module.exports={validate,authenticateJWT}

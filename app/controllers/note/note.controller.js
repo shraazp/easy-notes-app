@@ -1,12 +1,12 @@
 // controller.js
-const logger = require('../../utils/logger.js');
+const logger = require('../../../utils/logger.js');
 const {
     createNewNote,
     getNotes,
     getNote,
     updateNoteId,
     deleteNote
-} = require('../service/note.service.js')
+} = require('../../service/note.service.js')
 // Create and Save a new Note
 exports.create = (req, res) => {
     createNewNote(req.body.title, req.body.content).then(data => {

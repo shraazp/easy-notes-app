@@ -1,12 +1,34 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 const UserSchema = mongoose.Schema({
-    firstName: {type:String,required:true},
+    firstName: {
+        type: String,
+        required: true
+    },
     lastName: String,
-    password: {type:String,required:true},
-    phoneNumber: String,
-    email: {type:String,required:true}
+    password: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        unique: true,
+        required: true
+    }
 }, {timestamps: true});
 const User = mongoose.model('User', UserSchema);
+// login a user
+loginUser = (userDetails) => {
+    return User.findOne({email: userDetails.email}).then((data) => {
+        if (data) {
+            return data;
+        } else {
+            throw new Error("email not found");
+        }
+    }).catch((error) => {
+        throw error;
+    })
+
+};
 // create a user
 const createUser = (userDetails) => {
     const user = new User({
@@ -43,6 +65,7 @@ const deleteById = (findId) => {
     return User.findByIdAndRemove(findId)
 }
 module.exports = {
+    loginUser,
     createUser,
     findAllUsers,
     findUser,

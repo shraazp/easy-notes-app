@@ -1,15 +1,27 @@
-const logger=require('../../utils/logger.js')
-const{createNewUser,
+const logger = require('../../../utils/logger.js')
+const {
+    login,
+    createNewUser,
     getUsers,
     getUser,
     updateUsers,
     deleteUsers
-}=require('../service/user.service')
-exports.create=(req,res)=>{
-    createNewUser(req.body).then((data)=>res.send(data)).catch((err)=>{
-        logger.error(err.message || "Some error occurred while creating the user.")
+} = require('../../service/user.service')
+//login user
+exports.loginUser = (req, res) => {
+    let userDetails = req.body
+    login(userDetails).then((data) => {
+        res.send(data)
+    }).catch((err) => {
+        res.send(err.message)
+    })
+}
+//create a user
+exports.create = (req, res) => {
+    createNewUser(req.body).then((data) => res.send(data)).catch((err) => {
+        logger.error(err.message)
         res.status(500).send({
-            message: err.message || "Some error occurred while creating the user."
+            message: err.message
         });
     })
 }
@@ -20,7 +32,7 @@ exports.findAll = (req, res) => {
     }).catch(err => {
         logger.error("error 500 while retrieving data")
         res.status(500).send({
-            message: err.message || "Some error occurred while retrieving users."
+            message: err.message
         });
     })
 };
@@ -43,7 +55,8 @@ exports.findOne = (req, res) => {
         res.send(resultData);
     })
 };
-exports.update = (req, res) => { // Find note and update it with the request body
+// Find note and update it with the request body
+exports.update = (req, res) => { 
     let id = req.params.userId
     let userDetails = req.body
     updateUsers(id, userDetails).then(result => {
@@ -61,9 +74,10 @@ exports.update = (req, res) => { // Find note and update it with the request bod
         });
     });
 };
+
 // Delete a note with the specified noteId in the request
 exports.delete = (req, res) => {
-    deleteUsers(req.params.userId).then(result=> {
+    deleteUsers(req.params.userId).then(result => {
         res.send({message: "user deleted successfully!"});
     }).catch(err => {
         if (err.kind === 'ObjectId' || err.name === 'NotFound') {

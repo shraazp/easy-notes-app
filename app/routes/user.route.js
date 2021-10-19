@@ -1,8 +1,10 @@
 const express = require('express')
 const routerUser = express.Router() // middleware creates route handler
-const users = require('../controllers/user.controller.js');
+const users = require('../controllers/user/user.controller.js');
 //const validate = require('../middleware/note.middleware.js')
 const { userValidationRules, validate } = require('../middleware/user.middleware')
+//login
+routerUser.post('/login',users.loginUser);
 // Create a new Note
 routerUser.post('/',userValidationRules(), validate, users.create);
 // Retrieve all Notes
