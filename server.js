@@ -3,7 +3,6 @@ const dbConnect = require('./config/database.connect.js')
 const route = require('./app/routes/note.routes.js');
 const routeUser = require('./app/routes/user.route.js');
 const logger = require('./utils/logger');
-const routerUser = require('./app/routes/user.route.js');
 // create express app
 const app = express();
 // middleware

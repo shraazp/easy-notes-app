@@ -7,22 +7,29 @@ const {
     updateUsers,
     deleteUsers
 } = require('../../service/user.service')
+const dtoObject = require("./user.responseSchema");
+let responseObject;
 //login user
 exports.loginUser = (req, res) => {
     let userDetails = req.body
     login(userDetails).then((data) => {
-        res.send(data)
+        responseObject = dtoObject.userApiSuccess;
+        responseObject.message = data;
+        res.send(responseObject);
     }).catch((err) => {
-        res.send(err.message)
+        logger.error(err);
+        responseObject = dtoObject.userApiFailure;
+        responseObject.message = err.message;
+        return res.send(responseObject);
     })
 }
 //create a user
 exports.create = (req, res) => {
     createNewUser(req.body).then((data) => res.send(data)).catch((err) => {
-        logger.error(err.message)
-        res.status(500).send({
-            message: err.message
-        });
+        logger.error(err);
+        responseObject = dtoObject.userApiFailure;
+        responseObject.message = err.message;
+        return res.send(responseObject);
     })
 }
 // Retrieve and return all notes from the database.
@@ -30,27 +37,23 @@ exports.findAll = (req, res) => {
     getUsers().then(users => {
         res.send(users);
     }).catch(err => {
-        logger.error("error 500 while retrieving data")
-        res.status(500).send({
-            message: err.message
-        });
-    })
-};
+        logger.error(err);
+        responseObject = dtoObject.userApiFailure;
+        responseObject.message = err.message;
+        return res.send(responseObject)
+});}
 // Find a single note with a noteId
 exports.findOne = (req, res) => {
     getUser(req.params.userId, (error, resultData) => {
-        logger.error("Error retrieving user with id " + req.params.noteId)
         if (error) {
-            return res.status(500).send({
-                message: "Error retrieving user with id " + req.params.noteId
-            })
+            responseObject = dtoObject.userApiFailure;
+            responseObject.message = err.message;
+            res.send(responseObject);
         }
-
         if (err.kind === 'ObjectId') {
             logger.error("user not found with id")
-            return res.status(404).send({
-                message: "user not found with id " + req.params.noteId
-            });
+            responseObject = dtoObject.userApiFindFailure;
+            res.send(responseObject);
         }
         res.send(resultData);
     })
@@ -64,14 +67,12 @@ exports.update = (req, res) => {
     }).catch(err => {
         if (err.kind === 'ObjectId') {
             logger.error("user not found with id")
-            return res.status(404).send({
-                message: "user not found with id " + req.params.noteId
-            });
+            responseObject = dtoObject.userApiFindFailure;
+            res.send(responseObject);
         }
-        logger.error("Error updating user with id " + req.params.noteId)
-        return res.status(500).send({
-            message: "Error updating user with id " + req.params.noteId
-        });
+        responseObject = dtoObject.userApiFailure;
+            responseObject.message = err.message;
+            res.send(responseObject);
     });
 };
 
@@ -82,14 +83,13 @@ exports.delete = (req, res) => {
     }).catch(err => {
         if (err.kind === 'ObjectId' || err.name === 'NotFound') {
             logger.error("user not found with id " + req.params.noteId)
-            return res.status(404).send({
-                message: "user not found with id " + req.params.noteId
-            });
+            responseObject = dtoObject.userApiFindFailure;
+            res.send(responseObject);
         }
-        logger.error("Could not delete note with id " + req.params.noteId)
-        return res.status(500).send({
-            message: "Could not delete note with id " + req.params.noteId
+        responseObject = dtoObject.userApiFailure;
+            responseObject.message = err.message;
+            res.send(responseObject);
 
         });
-    });
+    
 };

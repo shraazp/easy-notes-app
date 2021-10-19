@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const bcrypt = require('bcrypt');
 const UserSchema = mongoose.Schema({
     firstName: {
         type: String,
@@ -31,10 +32,11 @@ loginUser = (userDetails) => {
 };
 // create a user
 const createUser = (userDetails) => {
+    encryptedPassword =bcrypt.hashSync(userDetails.password, 10);
     const user = new User({
         firstName: userDetails.firstName,
         lastName: userDetails.lastName,
-        password: userDetails.password,
+        password: encryptedPassword,
         phoneNumber: userDetails.phoneNumber,
         email: userDetails.email
     })
