@@ -26,13 +26,7 @@ const updateNote = (findId, title, content) => {
     return Note.findByIdAndUpdate(findId, {
         title: title,
         content: content
-    }, {new: true}).then((result) => {
-        console.log("model this");
-        return result;
-    }).catch((err) => {
-        console.log("catch model");
-        return err
-    })
+    }, {new: true})
 }
 // query to delete a note
 const deleteById = (findId) => {

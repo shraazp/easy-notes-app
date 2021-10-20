@@ -13,6 +13,7 @@
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         }
     },
+
     "User": {
         "type": "object",
         "properties": {
@@ -35,9 +36,9 @@
         },
         "required": ["firstname", "lastname", "email", "password"]
     },
-    "loginUser":{
-        "type":"object",
-        "properties":{
+    "loginUser": {
+        "type": "object",
+        "properties": {
             "email": {
                 "type": "String",
                 "example": "steve.k@gmail.com"
@@ -47,196 +48,364 @@
                 "example": "naruto"
             }
         },
-        "required": [ "email", "password"]
+        "required": ["email", "password"]
     },
-    "paths" : {
-"/users": {
-    "get": {
-        "tags": [
-            "user"
-          ],
-        "summary": "Returns a list of users.",
-        "description": "Optional extended description in CommonMark or HTML",
-        "responses": {
-            "200": {
-                "description": "A JSON array of user names",
-                "content": {
-                    "application/json": {
-                        "schema": {
-                            "type": "array",
-                            "items": {
-                                "type": "string"
+    "note": {
+        "type": "object",
+        "properties": {
+            "title": {
+                "type": "String",
+                "example": "First note"
+            },
+            "content": {
+                "type": "String",
+                "example": "This is my first noteF"
+            }
+        }
+    },
+    "paths": {
+        "/users": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Returns a list of users.",
+                "description": "Optional extended description in CommonMark or HTML",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of user names",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
                             }
                         }
                     }
                 }
-            }
-        }
-    },
-    "post": {
-        "tags": [
-            "user"
-          ],
-        "summary": "Create a new user.",
-        "description": "Optional extended description in CommonMark or HTML",
-        "parameters": [
-          {
-            "required": true,
-            "in": "body",
-            "name": "body",
-            "description": "Created user object",
-            "schema": {
-              "$ref": "#/User"
-        }}],
-        
-        "responses":{
-          "201":{
-            "description":"created"
-          }
-        }
-    }
+            },
+            "post": {
+                "tags": ["user"],
+                "summary": "Create a new user.",
+                "description": "Optional extended description in CommonMark or HTML",
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created user object",
+                        "schema": {
+                            "$ref": "#/User"
+                        }
+                    }
+                ],
 
-},
-"/users/{userId}":{
-    "get": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Get user by user id",
-        "description": "",
-        "operationId": "getUserById",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "The id that needs to be fetched. ",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "successful operation",
-            "schema": {
-              "$ref": "#/User"
-            }
-          },
-          "400": {
-            "description": "Invalid userId supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      },
-      "put": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Updated user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "updateUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "user id that need to be updated",
-            "required": true,
-            "type": "string"
-          },
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Updated user object",
-            "required": true,
-            "schema": {
-              "$ref": "#/User"
-            }
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid user supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      },
-      "delete": {
-        "tags": [
-          "user"
-        ],
-        "summary": "Delete user",
-        "description": "This can only be done by the logged in user.",
-        "operationId": "deleteUser",
-        "produces": [
-          "application/xml",
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "description": "The user id that needs to be deleted",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid username supplied"
-          },
-          "404": {
-            "description": "User not found"
-          }
-        }
-      }
-    },
-    "/users/login": {
-        "post": {
-          "tags": [
-            "user"
-          ],
-          "summary": "Logs user into the system",
-          "description": "",
-          "operationId": "loginUser",
-          "produces": [
-            "application/xml",
-            "application/json"
-          ],
-          "parameters": [
-            {
-                "in": "body",
-                "name": "body",
-                "description": "login credentials",
-                "required": true,
-                "schema": {
-                  "$ref": "#/loginUser"
+                "responses": {
+                    "201": {
+                        "description": "created"
+                    }
                 }
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "successful operation",
-              "schema": {
-                "type": "string"
-              }
+
+        },
+        "/users/{userId}": {
+            "get": {
+                "tags": ["user"],
+                "summary": "Get user by user id",
+                "description": "",
+                "operationId": "getUserById",
+                "produces": [
+                    "application/xml", "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The id that needs to be fetched. ",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/User"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid userId supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
             },
-            "400": {
-              "description": "Invalid email/password supplied"
+            "put": {
+                "tags": ["user"],
+                "summary": "Updated user",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "updateUser",
+                "produces": [
+                    "application/xml", "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "user id that need to be updated",
+                        "required": true,
+                        "type": "string"
+                    }, {
+                        "in": "body",
+                        "name": "body",
+                        "description": "Updated user object",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid user supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": ["user"],
+                "summary": "Delete user",
+                "description": "This can only be done by the logged in user.",
+                "operationId": "deleteUser",
+                "produces": [
+                    "application/xml", "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "userId",
+                        "in": "path",
+                        "description": "The user id that needs to be deleted",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Invalid username supplied"
+                    },
+                    "404": {
+                        "description": "User not found"
+                    }
+                }
             }
-          }
+        },
+        "/users/login": {
+            "post": {
+                "tags": ["user"],
+                "summary": "Logs user into the system",
+                "description": "",
+                "operationId": "loginUser",
+                "produces": [
+                    "application/xml", "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "login credentials",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/loginUser"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid email/password supplied"
+                    }
+                }
+            }
+        },
+        "/notes": {
+            "get": {
+                "tags": ["notes"],
+                "summary": "Returns a list of notes.",
+                "description": "Optional extended description in CommonMark or HTML",
+                "responses": {
+                    "200": {
+                        "description": "A JSON array of user names",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": ["notes"],
+                "summary": "Create a new note.",
+                "description": "Optional extended description in CommonMark or HTML",
+                "parameters": [
+                    {
+                        "required": true,
+                        "in": "body",
+                        "name": "body",
+                        "description": "Created note object",
+                        "schema": {
+                            "$ref": "#/note"
+                        }
+                    }
+                ],
+
+                "responses": {
+                    "201": {
+                        "description": "created"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/notes/{noteId}": {
+          "get": {
+              "tags": ["notes"],
+              "summary": "Get note by note id",
+              "description": "",
+              "operationId": "getNoteById",
+              "produces": [
+                  "application/xml", "application/json"
+              ],
+              "parameters": [
+                  {
+                      "name": "noteId",
+                      "in": "path",
+                      "description": "The id that needs to be fetched. ",
+                      "required": true,
+                      "type": "string"
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "successful operation",
+                      "schema": {
+                          "$ref": "#/note"
+                      }
+                  },
+                  "400": {
+                      "description": "Invalid noteId supplied"
+                  },
+                  "404": {
+                      "description": "note not found"
+                  }
+              }, "security": [
+                {
+                    "Bearer": []
+                }
+            ]
+
+          },
+          "put": {
+            "tags": ["notes"],
+            "summary": "Updated note",
+            "description": "This can only be done by the logged in user.",
+            "operationId": "updateNote",
+            "produces": [
+                "application/xml", "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "noteId",
+                    "in": "path",
+                    "description": "note id that need to be updated",
+                    "required": true,
+                    "type": "string"
+                }, {
+                    "in": "body",
+                    "name": "body",
+                    "description": "Updated note object",
+                    "required": true,
+                    "schema": {
+                        "$ref": "#/note"
+                    }
+                }
+            ],
+            "responses": {
+                "400": {
+                    "description": "Invalid note supplied"
+                },
+                "404": {
+                    "description": "note not found"
+                }
+            },
+            "security": [
+              {
+                  "Bearer": []
+              }
+          ]
+        },
+        "delete": {
+            "tags": ["notes"],
+            "summary": "Delete note",
+            "description": "This can only be done by the logged in user.",
+            "operationId": "deleteNote",
+            "produces": [
+                "application/xml", "application/json"
+            ],
+            "parameters": [
+                {
+                    "name": "noteId",
+                    "in": "path",
+                    "description": "The note id that needs to be deleted",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "responses": {
+                "400": {
+                    "description": "Invalid note id supplied"
+                },
+                "404": {
+                    "description": "note not found"
+                }
+            },
+            "security": [
+              {
+                  "Bearer": []
+              }
+          ]
+        }
+
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
-  }
 }
-

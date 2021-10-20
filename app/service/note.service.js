@@ -22,10 +22,7 @@ const getNote = (findId,callback) => {
 // Find note and update it with the request body
 const updateNoteId = (findId,title,content) => {
 
-    return updateNote(findId,{title:title,content:content}, {new: true})
-    .then((result) => { console.log(result);return result; })
-    .catch((err)=>{console.log("catch model");return err})
-}
+    return updateNote(findId,title,content)}
 
 //query to delete a note
 const deleteNote = (findId) => {

@@ -7,6 +7,8 @@ const {
     updateNoteId,
     deleteNote
 } = require('../../service/note.service.js')
+const dtoObject = require("./note.responseSchema");
+let responseObject;
 // Create and Save a new Note
 exports.create = (req, res) => {
     createNewNote(req.body.title, req.body.content).then(data => {
@@ -36,17 +38,17 @@ exports.findOne = (req, res) => {
     getNote(req.params.noteId, (error, resultData) => {
         logger.error("Error retrieving note with id " + req.params.noteId)
         if (error) {
-            logger.error(err.message)
+            logger.error(error.message)
             responseObject = dtoObject.noteApiFailure;
-            responseObject.message = err.message;
-            res.send(responseObject);
+            responseObject.message = error.message;
+            return res.send(responseObject);
         }
 
-        if (err.kind === 'ObjectId') {
+        if (error.kind === 'ObjectId') {
             logger.error("note not found with id")
             responseObject = dtoObject.noteApiFindFailure;
-            responseObject.message = err.message;
-            res.send(responseObject);
+            responseObject.message = error.message;
+            return res.send(responseObject);
         }
         res.send(resultData);
     })
