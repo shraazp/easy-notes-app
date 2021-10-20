@@ -6,9 +6,11 @@ const {
     updateUser,
     deleteById
 } = require('../models/user.model');
+const mail=require("../../utils/mailer")
 const jwtHelper = require('../../utils/jwt');
 const bcrypt = require('bcrypt');
 const createNewUser = (userDetails) => {
+    mail.sendmail();
     return createUser(userDetails)
 }
 const login = (userDetails) => {

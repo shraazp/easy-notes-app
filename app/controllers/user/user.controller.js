@@ -47,10 +47,10 @@ exports.findOne = (req, res) => {
     getUser(req.params.userId, (error, resultData) => {
         if (error) {
             responseObject = dtoObject.userApiFailure;
-            responseObject.message = err.message;
+            responseObject.message = error.message;
             res.send(responseObject);
         }
-        if (err.kind === 'ObjectId') {
+        if (error.kind === 'ObjectId') {
             logger.error("user not found with id")
             responseObject = dtoObject.userApiFindFailure;
             res.send(responseObject);
