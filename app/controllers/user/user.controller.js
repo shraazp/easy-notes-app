@@ -44,19 +44,21 @@ exports.findAll = (req, res) => {
 });}
 // Find a single note with a noteId
 exports.findOne = (req, res) => {
-    getUser(req.params.userId, (error, resultData) => {
-        if (error) {
-            responseObject = dtoObject.userApiFailure;
-            responseObject.message = error.message;
-            res.send(responseObject);
-        }
-        if (error.kind === 'ObjectId') {
+    getUser(req.params.userId).then((data)=>{
+        responseObject = dtoObject.userApiSuccess;
+        responseObject.message = data;
+        res.send(responseObject);
+    })
+    .catch(err => {
+        if (err.kind === 'ObjectId') {
             logger.error("user not found with id")
             responseObject = dtoObject.userApiFindFailure;
             res.send(responseObject);
         }
-        res.send(resultData);
-    })
+        responseObject = dtoObject.userApiFailure;
+            responseObject.message = err.message;
+            res.send(responseObject);
+    });
 };
 // Find note and update it with the request body
 exports.update = (req, res) => { 

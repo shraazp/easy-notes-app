@@ -31,10 +31,8 @@ const getUsers = () => {
     return findAllUsers()
 }
 
-const getUser = (findId, callback) => {
-    findUser(findId, (error, data) => {
-        return(error) ? callback(error) : callback(data);
-    })
+const getUser = (findId) => {
+  return  findUser(findId)
 }
 
 const updateUsers = (findId, userDetails) => {

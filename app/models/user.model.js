@@ -37,7 +37,6 @@ const createUser = (userDetails) => {
         firstName: userDetails.firstName,
         lastName: userDetails.lastName,
         password: encryptedPassword,
-        phoneNumber: userDetails.phoneNumber,
         email: userDetails.email
     })
     return user.save()
@@ -47,18 +46,16 @@ const findAllUsers = () => {
     return User.find()
 }
 // query to find a single note
-const findUser = (findId, callback) => {
-    User.findById(findId, (error, data) => {
-        return(error) ? callback(error) : callback(data);
-    })
+const findUser = (findId) => {
+    return User.findById(findId)
 }
 // Find note and update it with the request body
 const updateUser = (findId, userDetails) => {
+    encryptedPassword =bcrypt.hashSync(userDetails.password, 10);
     return User.findByIdAndUpdate(findId, {
         firstName: userDetails.firstName,
         lastName: userDetails.lastName,
-        password: userDetails.password,
-        phoneNumber: userDetails.phoneNumber,
+        password: encryptedPassword,
         email: userDetails.email
     })
 };

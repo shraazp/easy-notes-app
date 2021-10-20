@@ -1,0 +1,242 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "This is a fundoo notes application.You can create notes here",
+        "version": "1.0.0",
+        "title": "Fundoo notes app",
+        "termsOfService": "http://swagger.io/terms/",
+        "contact": {
+            "email": "apiteam@swagger.io"
+        },
+        "license": {
+            "name": "Apache 2.0",
+            "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+        }
+    },
+    "User": {
+        "type": "object",
+        "properties": {
+            "firstName": {
+                "type": "String",
+                "example": "Steve"
+            },
+            "lastName": {
+                "type": "String",
+                "example": "K"
+            },
+            "email": {
+                "type": "String",
+                "example": "steve.k@gmail.com"
+            },
+            "password": {
+                "type": "String",
+                "example": "naruto"
+            }
+        },
+        "required": ["firstname", "lastname", "email", "password"]
+    },
+    "loginUser":{
+        "type":"object",
+        "properties":{
+            "email": {
+                "type": "String",
+                "example": "steve.k@gmail.com"
+            },
+            "password": {
+                "type": "String",
+                "example": "naruto"
+            }
+        },
+        "required": [ "email", "password"]
+    },
+    "paths" : {
+"/users": {
+    "get": {
+        "tags": [
+            "user"
+          ],
+        "summary": "Returns a list of users.",
+        "description": "Optional extended description in CommonMark or HTML",
+        "responses": {
+            "200": {
+                "description": "A JSON array of user names",
+                "content": {
+                    "application/json": {
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "post": {
+        "tags": [
+            "user"
+          ],
+        "summary": "Create a new user.",
+        "description": "Optional extended description in CommonMark or HTML",
+        "parameters": [
+          {
+            "required": true,
+            "in": "body",
+            "name": "body",
+            "description": "Created user object",
+            "schema": {
+              "$ref": "#/User"
+        }}],
+        
+        "responses":{
+          "201":{
+            "description":"created"
+          }
+        }
+    }
+
+},
+"/users/{userId}":{
+    "get": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Get user by user id",
+        "description": "",
+        "operationId": "getUserById",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The id that needs to be fetched. ",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "schema": {
+              "$ref": "#/User"
+            }
+          },
+          "400": {
+            "description": "Invalid userId supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Updated user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "updateUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "user id that need to be updated",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Updated user object",
+            "required": true,
+            "schema": {
+              "$ref": "#/User"
+            }
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid user supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "user"
+        ],
+        "summary": "Delete user",
+        "description": "This can only be done by the logged in user.",
+        "operationId": "deleteUser",
+        "produces": [
+          "application/xml",
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The user id that needs to be deleted",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid username supplied"
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      }
+    },
+    "/users/login": {
+        "post": {
+          "tags": [
+            "user"
+          ],
+          "summary": "Logs user into the system",
+          "description": "",
+          "operationId": "loginUser",
+          "produces": [
+            "application/xml",
+            "application/json"
+          ],
+          "parameters": [
+            {
+                "in": "body",
+                "name": "body",
+                "description": "login credentials",
+                "required": true,
+                "schema": {
+                  "$ref": "#/loginUser"
+                }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "successful operation",
+              "schema": {
+                "type": "string"
+              }
+            },
+            "400": {
+              "description": "Invalid email/password supplied"
+            }
+          }
+        }
+    }
+  }
+}
+
