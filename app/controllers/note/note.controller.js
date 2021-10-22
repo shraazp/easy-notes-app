@@ -24,7 +24,7 @@ exports.create = (req, res) => {
 };
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
-    getNotes().then(notes => {
+    getNotes(req.params.userId).then(notes => {
         res.send(notes);
     }).catch(err => {
         logger.error(err.message)
@@ -35,23 +35,20 @@ exports.findAll = (req, res) => {
 };
 // Find a single note with a noteId
 exports.findOne = (req, res) => {
-    getNote(req.params.noteId, (error, resultData) => {
-        logger.error("Error retrieving note with id " + req.params.noteId)
-        if (error) {
-            logger.error(error.message)
-            responseObject = dtoObject.noteApiFailure;
-            responseObject.message = error.message;
-            return res.send(responseObject);
-        }
-
-        if (error.kind === 'ObjectId') {
+    getNote(req.params.noteId).then(note => {
+        res.send(note);
+    }).catch(err => {
+        if (err.kind === 'ObjectId') {
             logger.error("note not found with id")
             responseObject = dtoObject.noteApiFindFailure;
-            responseObject.message = error.message;
-            return res.send(responseObject);
+            responseObject.message = err.message;
+            res.send(responseObject);
         }
-        res.send(resultData);
-    })
+        logger.error("note not found with id")
+        responseObject = dtoObject.noteApiFailure;
+        responseObject.message = err.message;
+        res.send(responseObject);
+    });
 
 };
 // Update a note identified by the noteId in the request

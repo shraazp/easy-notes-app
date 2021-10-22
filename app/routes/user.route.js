@@ -15,4 +15,9 @@ routerUser.get('/:userId', users.findOne);
 routerUser.put('/:userId',userValidationRules(), validate, users.update);
 // Delete a Note with noteId
 routerUser.delete('/:userId', users.delete);
+//forgot password
+routerUser.post("/forgot", users.forgotPassword);
+
+//email password reset route
+routerUser.post("/reset/:token", users.resetPassword);
 module.exports = routerUser

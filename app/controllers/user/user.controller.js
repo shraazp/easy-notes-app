@@ -1,3 +1,4 @@
+const { resolveContent } = require('nodemailer/lib/shared');
 const logger = require('../../../utils/logger.js')
 const {
     login,
@@ -5,7 +6,9 @@ const {
     getUsers,
     getUser,
     updateUsers,
-    deleteUsers
+    deleteUsers,
+    forgot,
+    reset
 } = require('../../service/user.service')
 const dtoObject = require("./user.responseSchema");
 let responseObject;
@@ -95,3 +98,29 @@ exports.delete = (req, res) => {
         });
     
 };
+
+exports.forgotPassword = (req, res) => {
+    let email = req.body.email;
+    forgot(email)
+      .then((data) => {
+        res.send("Result:" + data);
+      })
+      .catch((err) => {
+        console.log("error:" + err);
+        res.send(err);
+      });
+  };
+
+  exports.resetPassword = (req, res) => {
+    let token = req.params.token;
+    let password = req.body.password
+    
+    reset(token,password)
+      .then((data) => {
+        res.json({message:"Password updated successfully","Result:" :data});
+      })
+      .catch((err) => {
+        console.log("error:" + err);
+        res.send(err);
+      });
+  };

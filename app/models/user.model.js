@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
+require("dotenv").config();
+const jwtHelper = require("../../utils/jwt");
 const UserSchema = mongoose.Schema({
     firstName: {
         type: String,
@@ -14,9 +16,11 @@ const UserSchema = mongoose.Schema({
         type: String,
         unique: true,
         required: true
-    }
+    },
+    resetPasswordToken: String,
 }, {timestamps: true});
 const User = mongoose.model('User', UserSchema);
+
 // login a user
 loginUser = (userDetails) => {
     return User.findOne({email: userDetails.email}).then((data) => {
@@ -63,11 +67,62 @@ const updateUser = (findId, userDetails) => {
 const deleteById = (findId) => {
     return User.findByIdAndRemove(findId)
 }
+forgotPassword = (email) => {
+    return User
+      .findOne({ email: email })
+      .then((data) => {
+        if (!data) {
+          throw "Email not found";
+        } else {
+          let token = jwtHelper.generateAccessToken();
+          data.resetPasswordToken = token;
+          return data
+            .save()
+            .then((data) => {
+              return data;
+            })
+            .catch((err) => {
+              throw err;
+            });
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+  resetPassword = (token, newPassword) => {
+    return User
+      .findOne({ resetPasswordToken: token })
+      .then((data) => {
+        if (!data) {
+          throw "token not found";
+        } else {
+          encryptedPassword = bcrypt.hashSync(newPassword, 10);
+          (data.password = encryptedPassword),
+            (data.resetPasswordToken = undefined);
+          return data
+            .save()
+            .then((data) => {
+              return data;
+            })
+            .catch((err) => {
+              throw err;
+            });
+        }
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+
 module.exports = {
     loginUser,
     createUser,
     findAllUsers,
     findUser,
     updateUser,
-    deleteById
+    deleteById,
+    forgotPassword,
+    resetPassword,
+    User
 }

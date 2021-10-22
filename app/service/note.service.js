@@ -8,15 +8,13 @@ const createNewNote = (title,content)=>{
 }
 
 //query to find all notes
-const getNotes = () =>{
-    return findAllNotes()
+const getNotes = (userId) =>{
+    return findAllNotes(userId)
 }
 
 //query to find a single note
-const getNote = (findId,callback) => {
-    findNote(findId,(error,data)=>{
-        return (error)?callback(error):callback(data);
-    })
+const getNote = (findId) => {
+  return  findNote(findId)
 }
 
 // Find note and update it with the request body

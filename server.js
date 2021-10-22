@@ -10,6 +10,8 @@ app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use('/notes', route)
 app.use('/users', routeUser)
+var flash = require('express-flash');
+app.use(flash());
 // Connecting to the database
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./swagger.json');

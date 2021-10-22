@@ -4,13 +4,15 @@ const {
     findAllUsers,
     findUser,
     updateUser,
-    deleteById
+    deleteById,
+    forgotPassword,
+    resetPassword
+    
 } = require('../models/user.model');
-const mail=require("../../utils/mailer")
+const mailHelper=require("../../utils/mailer")
 const jwtHelper = require('../../utils/jwt');
 const bcrypt = require('bcrypt');
 const createNewUser = (userDetails) => {
-    mail.sendmail();
     return createUser(userDetails)
 }
 const login = (userDetails) => {
@@ -43,11 +45,41 @@ const deleteUsers = (findId) => {
     return deleteById(findId)
 }
 
+forgot = (email) => {
+    return forgotPassword(email)
+      .then((data) => {
+        return mailHelper
+          .mailer(data.email, data.resetPasswordToken)
+          .then((data) => {
+            return data;
+          })
+          .catch((err) => {
+            throw err;
+          });
+      })
+      .catch((err) => {
+        throw err;
+      });
+  };
+  
+  reset = (token,password) =>{
+    return resetPassword(token,password)
+    .then(data => {
+      return data;
+    })
+    .catch(err => {
+      throw err;
+    })
+  }
+
+
 module.exports = {
     login,
     createNewUser,
     getUsers,
     getUser,
     updateUsers,
-    deleteUsers
+    deleteUsers,
+    forgot,
+    reset
 }
