@@ -18,7 +18,7 @@ const createNewUser = (userDetails) => {
 const login = (userDetails) => {
     return loginUser(userDetails).then((data) => {
         if(bcrypt.compareSync(userDetails.password,data.password)){
-          var token=jwtHelper.generateAccessToken(userDetails.email);
+          var token=jwtHelper.generateAccessToken(data._id);
           return token
         }
         else

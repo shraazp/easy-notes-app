@@ -1,14 +1,23 @@
 const {body, validationResult} = require('express-validator')
+/**
+ * validation rules set for user details with express validator  
+ * @returns error messages
+ */
 const userValidationRules = () => {
     return [
-        // username must be an email
         body('email').exists().isEmail().withMessage("Please enter a valid email"),
-        // password must be at least 5 chars long
         body('password').isLength(
             {min: 5}
         ).withMessage("password length should be greater than 5 characters")
     ]
 }
+/**
+ * to print the error messages
+ * @param {Object} req 
+ * @param {Object} res 
+ * @param {next} next 
+ * @returns status message with error message
+ */
 const validate = (req, res, next) => {
     const errors = validationResult(req)
     if (errors.isEmpty()) {
@@ -19,7 +28,6 @@ const validate = (req, res, next) => {
 
     return res.status(422).json({errors: extractedErrors})
 }
-
 module.exports = {
     userValidationRules,
     validate

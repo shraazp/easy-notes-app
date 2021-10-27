@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 require("dotenv").config();
 const jwtHelper = require("../../utils/jwt");
+/**
+ * Schema of the user
+ */
 const UserSchema = mongoose.Schema({
     firstName: {
         type: String,
@@ -17,11 +20,14 @@ const UserSchema = mongoose.Schema({
         unique: true,
         required: true
     },
-    resetPasswordToken: String,
+    resetPasswordToken: String
 }, {timestamps: true});
 const User = mongoose.model('User', UserSchema);
-
-// login a user
+/**
+ * Function for login of the user 
+ * @param {Object} userDetails
+ * @returns promise
+ */
 loginUser = (userDetails) => {
     return User.findOne({email: userDetails.email}).then((data) => {
         if (data) {
@@ -34,28 +40,39 @@ loginUser = (userDetails) => {
     })
 
 };
-// create a user
+/**
+ * function to create a user
+ * @param {Object} userDetails 
+ * @returns promise with user details
+ */
 const createUser = (userDetails) => {
-    encryptedPassword =bcrypt.hashSync(userDetails.password, 10);
-    const user = new User({
-        firstName: userDetails.firstName,
-        lastName: userDetails.lastName,
-        password: encryptedPassword,
-        email: userDetails.email
-    })
+    encryptedPassword = bcrypt.hashSync(userDetails.password, 10);
+    const user = new User({firstName: userDetails.firstName, lastName: userDetails.lastName, password: encryptedPassword, email: userDetails.email})
     return user.save()
 }
-// find all notes
+/**
+ * function to get all the users
+ * @returns promise with all the users
+ */
 const findAllUsers = () => {
     return User.find()
 }
-// query to find a single note
+/**
+ * function to find a particular user with userid
+ * @param {Object} findId 
+ * @returns promise with the particular user if not error message
+ */
 const findUser = (findId) => {
     return User.findById(findId)
 }
-// Find note and update it with the request body
+/**
+ * function to update user
+ * @param {Object} findId 
+ * @param {Object} userDetails 
+ * @returns promise with previous version of user
+ */
 const updateUser = (findId, userDetails) => {
-    encryptedPassword =bcrypt.hashSync(userDetails.password, 10);
+    encryptedPassword = bcrypt.hashSync(userDetails.password, 10);
     return User.findByIdAndUpdate(findId, {
         firstName: userDetails.firstName,
         lastName: userDetails.lastName,
@@ -63,57 +80,52 @@ const updateUser = (findId, userDetails) => {
         email: userDetails.email
     })
 };
-// query to delete a note
+/**
+ * function to delete a user by his id
+ * @param {Object} findId user id
+ * @returns status message
+ */
 const deleteById = (findId) => {
     return User.findByIdAndRemove(findId)
 }
+/**
+ * function to send a mail if password is forgotten
+ */
 forgotPassword = (email) => {
-    return User
-      .findOne({ email: email })
-      .then((data) => {
+    return User.findOne({email: email}).then((data) => {
         if (!data) {
-          throw "Email not found";
+            throw "Email not found";
         } else {
-          let token = jwtHelper.generateAccessToken();
-          data.resetPasswordToken = token;
-          return data
-            .save()
-            .then((data) => {
-              return data;
-            })
-            .catch((err) => {
-              throw err;
+            let token = jwtHelper.generateAccessToken();
+            data.resetPasswordToken = token;
+            return data.save().then((data) => {
+                return data;
+            }).catch((err) => {
+                throw err;
             });
         }
-      })
-      .catch((err) => {
+    }).catch((err) => {
         throw err;
-      });
-  };
-  resetPassword = (token, newPassword) => {
-    return User
-      .findOne({ resetPasswordToken: token })
-      .then((data) => {
+    });
+};
+resetPassword = (token, newPassword) => {
+    return User.findOne({resetPasswordToken: token}).then((data) => {
         if (!data) {
-          throw "token not found";
+            throw "token not found";
         } else {
-          encryptedPassword = bcrypt.hashSync(newPassword, 10);
-          (data.password = encryptedPassword),
+            encryptedPassword = bcrypt.hashSync(newPassword, 10);
+            (data.password = encryptedPassword),
             (data.resetPasswordToken = undefined);
-          return data
-            .save()
-            .then((data) => {
-              return data;
-            })
-            .catch((err) => {
-              throw err;
+            return data.save().then((data) => {
+                return data;
+            }).catch((err) => {
+                throw err;
             });
         }
-      })
-      .catch((err) => {
+    }).catch((err) => {
         throw err;
-      });
-  };
+    });
+};
 
 module.exports = {
     loginUser,

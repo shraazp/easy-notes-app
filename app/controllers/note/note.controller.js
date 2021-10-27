@@ -11,7 +11,7 @@ const dtoObject = require("./note.responseSchema");
 let responseObject;
 // Create and Save a new Note
 exports.create = (req, res) => {
-    createNewNote(req.body.title, req.body.content).then(data => {
+    createNewNote(req.body.title, req.body.content,req.body.userId).then(data => {
         responseObject = dtoObject.noteApiSuccess;
         responseObject.message = data;
         res.send(responseObject);
@@ -24,7 +24,7 @@ exports.create = (req, res) => {
 };
 // Retrieve and return all notes from the database.
 exports.findAll = (req, res) => {
-    getNotes(req.params.userId).then(notes => {
+    getNotes(req.body.userId).then(notes => {
         res.send(notes);
     }).catch(err => {
         logger.error(err.message)
@@ -35,7 +35,7 @@ exports.findAll = (req, res) => {
 };
 // Find a single note with a noteId
 exports.findOne = (req, res) => {
-    getNote(req.params.noteId).then(note => {
+    getNote(req.body.userId,req.params.noteId).then(note => {
         res.send(note);
     }).catch(err => {
         if (err.kind === 'ObjectId') {
@@ -56,7 +56,7 @@ exports.update = (req, res) => { // Find note and update it with the request bod
     let id = req.params.noteId
     let title = req.body.title
     let content = req.body.content
-    updateNoteId(id, title, content).then(note => {
+    updateNoteId(req.body.userId,id, title, content).then(note => {
         res.send(note);
     }).catch(err => {
         if (err.kind === 'ObjectId') {
@@ -73,7 +73,7 @@ exports.update = (req, res) => { // Find note and update it with the request bod
 };
 // Delete a note with the specified noteId in the request
 exports.delete = (req, res) => {
-    deleteNote(req.params.noteId).then(note => {
+    deleteNote(req.body.userId,req.params.noteId).then(note => {
         res.send({message: "Note deleted successfully!"});
     }).catch(err => {
         if (err.kind === 'ObjectId' || err.name === 'NotFound') {

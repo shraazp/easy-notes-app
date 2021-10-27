@@ -1,9 +1,9 @@
 //note.service.js
 const {createNote,findAllNotes,findNote,updateNote,deleteById} = require('../models/note.model.js');
 
-const createNewNote = (title,content)=>{
+const createNewNote = (title,content,userId)=>{
     //function call to create a new note with the given title and content
-    let note = createNote(title,content)    
+    let note = createNote(title,content,userId)    
     return note
 }
 
@@ -13,18 +13,18 @@ const getNotes = (userId) =>{
 }
 
 //query to find a single note
-const getNote = (findId) => {
-  return  findNote(findId)
+const getNote = (userId,findId) => {
+  return  findNote(userId,findId)
 }
 
 // Find note and update it with the request body
-const updateNoteId = (findId,title,content) => {
+const updateNoteId = (userId,findId,title,content) => {
 
-    return updateNote(findId,title,content)}
+    return updateNote(userId,findId,title,content)}
 
 //query to delete a note
-const deleteNote = (findId) => {
-    return deleteById(findId)
+const deleteNote = (userId,findId) => {
+    return deleteById(userId,findId)
 }
 
 module.exports = {createNewNote,getNotes,getNote,updateNoteId,deleteNote}

@@ -1,8 +1,8 @@
 const jwt = require('jsonwebtoken');
 require("dotenv").config();
-exports.generateAccessToken = (email) => {
+exports.generateAccessToken = (_id) => {
     return jwt.sign({
-        email: email
+        _id: _id
     }, process.env.TOKEN_KEY, {expiresIn: '1h'});
 }
 exports.verifyToken = (token, callback) => {
