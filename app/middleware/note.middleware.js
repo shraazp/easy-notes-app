@@ -1,4 +1,11 @@
 const jwtHelper = require('../../utils/jwt');
+let express = require('express'),
+    multer = require('multer'),
+    mongoose = require('mongoose'),
+  
+     uuid = require('uuid');
+
+    router = express.Router();
 /**
  * to validate if content in note is present or not as well as if title is a string
  * @param {object} req 
@@ -34,13 +41,39 @@ const authenticateJWT = (req, res, next) => {
                 return res.send(err);
             }
             req.body.userId = user._id;
+          
             next();
         });
     } else {
         res.sendStatus(401);
     }
 };
+const DIR = 'C:/Users/shravya.p_ymedialabs/node/node-easy-notes-app/app/public/';
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, DIR);
+    },
+    filename: (req, file, cb) => {
+        const fileName = file.originalname.toLowerCase().split(' ').join('-');
+        cb(null,uuid.v4() + '-' + fileName)
+    }
+});
+
+var upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if (file.mimetype == "image/png" || file.mimetype == "image/jpg" || file.mimetype == "image/jpeg") {
+            cb(null, true);
+        } else {
+            cb(null, false);
+            return cb(new Error('Only .png, .jpg and .jpeg format allowed!'));
+        }
+    }
+});
+
 module.exports = {
     validate,
-    authenticateJWT
+    authenticateJWT,
+   upload
 }

@@ -28,7 +28,7 @@ exports.loginUser = (req, res) => {
 }
 //create a user
 exports.create = (req, res) => {
-    createNewUser(req.body).then((data) => res.send(data)).catch((err) => {
+    createNewUser(req.body).then((data) => {res.send(data);}).catch((err) => {
         logger.error(err);
         responseObject = dtoObject.userApiFailure;
         responseObject.message = err.message;

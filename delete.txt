@@ -1,0 +1,99 @@
+import {
+    Grid,
+    Card,
+    Typography,
+    CardActions,
+    CardContent
+} from "@mui/material";
+import React from "react";
+import '../css/delete.css'
+import {useSelector} from "react-redux";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import RestoreFromTrashIcon from '@mui/icons-material/RestoreFromTrash';
+import {useDispatch} from "react-redux";
+import {updateNote} from "../actions/notesActions";
+import { update } from "../service/noteRetrieve";
+const DeleteNote = () => {
+    const [title, setTitle] = React.useState("")
+    const [content, setContent] = React.useState("")
+    const [noteId, setNoteId] = React.useState("")
+    const dispatch = useDispatch();
+    const handleRestore = (item) => {
+        setTitle(item.title);
+        setContent(item.content);
+        setNoteId(item._id)
+        const data = {
+            title: title,
+            content: content,
+            isTrash: false
+        };
+        update(data, noteId).then((res) => {
+            dispatch(updateNote(res))
+        }).catch((err) => console.log(err.message));
+    }
+    const notes = useSelector((state) => state.allNotes.searchNotes);
+    return((notes.length > 0) ? (
+        <div className="trash">
+            <div className="trash-text-out">
+                <div className="trash-text">
+                    <span>Notes in trash are deleted after 7 days</span>
+                    <button className="empty-trash">Empty trash</button>
+                </div>
+            </div>
+            <div className="trash-content">
+
+                <Grid container
+                    spacing={4}>
+                    {
+                    notes.map((item) => {
+                        if (item.isTrash === true) {
+                            return (
+                                <Grid item
+                                    xs={4}
+                                    key={
+                                        item._id
+                                }>
+                                    <Card sx={
+                                        {minWidth: 245}
+                                    }>
+                                        <CardContent>
+                                            <Typography sx={
+                                                    {fontSize: 14}
+                                                }
+                                                color="text.secondary"
+                                                gutterBottom>
+                                                {
+                                                item.title
+                                            }</Typography>
+                                            <Typography variant="body2">
+                                                {
+                                                item.content
+                                            } </Typography>
+                                        </CardContent>
+                                        <CardActions>
+                                            <div>
+                                                <DeleteForeverIcon fontSize="small"/>
+                                                <RestoreFromTrashIcon fontSize="small"
+                                                    onClick={
+                                                        () => {console.log("hi")
+                                                            handleRestore(item)
+                                                        }
+                                                    }/>
+                                            </div>
+                                    </CardActions>
+                                </Card>
+                              
+                            </Grid>
+                            
+                            );
+                        }
+                    })
+                }  </Grid>
+
+            </div>
+        </div>
+       ) : (
+        <span>No notes in trash</span>
+    ));
+};
+export default DeleteNote;

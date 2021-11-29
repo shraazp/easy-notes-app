@@ -1,17 +1,21 @@
 // controller.js
+const { application } = require('express');
 const logger = require('../../../utils/logger.js');
 const {
     createNewNote,
     getNotes,
     getNote,
     updateNoteId,
-    deleteNote
+    deleteNote,
+  
 } = require('../../service/note.service.js')
 const dtoObject = require("./note.responseSchema");
 let responseObject;
+
 // Create and Save a new Note
 exports.create = (req, res) => {
-    createNewNote(req.body.title, req.body.content,req.body.userId).then(data => {
+ let filename= (req.file===undefined)?(undefined):(req.file.filename)
+    createNewNote(req.body.title, req.body.content,req.body.userId,req.body.color,filename).then(data => {
         responseObject = dtoObject.noteApiSuccess;
         responseObject.message = data;
         res.send(responseObject);
@@ -56,7 +60,10 @@ exports.update = (req, res) => { // Find note and update it with the request bod
     let id = req.params.noteId
     let title = req.body.title
     let content = req.body.content
-    updateNoteId(req.body.userId,id, title, content).then(note => {
+    let trash=req.body.isTrash
+    let color=req.body.color
+    let filename= (req.file===undefined)?(undefined):(req.file.filename)
+    updateNoteId(req.body.userId,id, title, content,trash,color,filename).then(note => {
         res.send(note);
     }).catch(err => {
         if (err.kind === 'ObjectId') {

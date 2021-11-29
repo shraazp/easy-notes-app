@@ -1,13 +1,20 @@
 const mongoose = require('mongoose');
+
 /**
  * Schema declared for notes userId is refered from User schema
  */
+ 
 const NoteSchema = mongoose.Schema({
     title: String,
     content: String,
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User"
+    },
+    isTrash:Boolean,
+    color:String,
+    profileImg: {
+        type: String
     }
 }, {timestamps: true});
 
@@ -19,8 +26,9 @@ const Note = mongoose.model('Note', NoteSchema);
  * @param {next} userId 
  * @returns promise 
  */
-const createNote = (title, content, userId) => {
-    const note = new Note({title: title, content: content, userId: userId});
+const createNote = (title, content, userId,color,filename) => {
+console.log(filename)
+    const note = new Note({title: title, content: content, userId: userId,isTrash:false,color:color,profileImg:filename});
     return note.save()
 };
 /**
@@ -51,13 +59,16 @@ const findNote = (userId, findId) => {
  * @param {Object} content 
  * @returns promise with updated note 
  */
-const updateNote = (userId, findId, title, content) => {
+const updateNote = (userId, findId, title, content,trash,color,filename) => {
     return Note.findOneAndUpdate({
         userId: userId,
         _id: findId
     }, {
         title: title,
-        content: content
+        content: content,
+        isTrash:trash,
+        color:color,
+        profileImg:filename
     }, {new: true})
 }
 /**
@@ -69,10 +80,13 @@ const updateNote = (userId, findId, title, content) => {
 const deleteById = (userId, findId) => {
     return Note.findOneAndRemove({userId: userId, _id: findId})
 }
+
+
 module.exports = {
     createNote,
     findAllNotes,
     findNote,
     updateNote,
-    deleteById
+    deleteById,
+  
 }
