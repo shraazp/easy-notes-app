@@ -27,7 +27,6 @@ const Note = mongoose.model('Note', NoteSchema);
  * @returns promise 
  */
 const createNote = (title, content, userId,color,filename) => {
-console.log(filename)
     const note = new Note({title: title, content: content, userId: userId,isTrash:false,color:color,profileImg:filename});
     return note.save()
 };
